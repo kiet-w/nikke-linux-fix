@@ -60,7 +60,11 @@ if [[ "$args_lower" == *"nikke"* ]]; then
 
   mkdir -p "$WINEPREFIX/mesa_cache"
 
-  exec "$DW/files/bin/wine" explorer /desktop=NIKKE,1280x720 "$@"
+  if [ -d "$WINEPREFIX/drive_c/NIKKE/Launcher" ]; then
+    cd "$WINEPREFIX/drive_c/NIKKE/Launcher"
+  fi
+
+  exec "$DW/files/bin/wine" "$@"
 else
   # ---- All other games: use original umu-run ----
   if [ -f "$HOME/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run.bak" ]; then

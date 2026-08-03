@@ -61,12 +61,13 @@ export MESA_SHADER_CACHE_MAX_SIZE=2G
 
 mkdir -p "$WINEPREFIX/mesa_cache"
 
-LAUNCHER="$WINEPREFIX/drive_c/NIKKE/Launcher/nikke_launcher.exe"
+LAUNCHER_DIR="$WINEPREFIX/drive_c/NIKKE/Launcher"
 
-if [ -f "$LAUNCHER" ]; then
-  echo "🚀 Launching GODDESS OF VICTORY: NIKKE (1280x720 Desktop Mode)..."
-  exec "$WINE_BIN" explorer /desktop=NIKKE,1280x720 "$LAUNCHER" "$@"
+if [ -d "$LAUNCHER_DIR" ]; then
+  cd "$LAUNCHER_DIR"
+  echo "🚀 Launching GODDESS OF VICTORY: NIKKE Launcher..."
+  exec "$WINE_BIN" nikke_launcher.exe "$@"
 else
-  echo "❌ NIKKE launcher not found at: $LAUNCHER"
+  echo "❌ NIKKE launcher directory not found at: $LAUNCHER_DIR"
   exit 1
 fi
