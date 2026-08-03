@@ -23,14 +23,12 @@ if [[ "$args_lower" == *"nikke"* ]]; then
     DW="$HOME/.local/share/lutris/runners/wine/dwproton-11.0-5-x86_64"
   fi
 
-  # Copy DXVK DLLs if missing
   DXVK_DIR="$HOME/.local/share/lutris/runtime/dxvk/v2.4.1"
   if [ -d "$DXVK_DIR" ]; then
     cp -rn "$DXVK_DIR/x64/"*.dll "$WINEPREFIX/drive_c/windows/system32/" 2>/dev/null
     cp -rn "$DXVK_DIR/x32/"*.dll "$WINEPREFIX/drive_c/windows/syswow64/" 2>/dev/null
   fi
 
-  # Ensure system DLLs exist in prefix
   if [ -d "$DW/files/share/default_pfx/drive_c/windows/system32" ]; then
     cp -rn "$DW/files/share/default_pfx/drive_c/windows/system32/"* "$WINEPREFIX/drive_c/windows/system32/" 2>/dev/null
     cp -rn "$DW/files/share/default_pfx/drive_c/windows/syswow64/"* "$WINEPREFIX/drive_c/windows/syswow64/" 2>/dev/null
@@ -62,7 +60,7 @@ if [[ "$args_lower" == *"nikke"* ]]; then
 
   mkdir -p "$WINEPREFIX/mesa_cache"
 
-  exec "$DW/files/bin/wine" "$@"
+  exec "$DW/files/bin/wine" explorer /desktop=NIKKE,1280x720 "$@"
 else
   # ---- All other games: use original umu-run ----
   if [ -f "$HOME/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run.bak" ]; then
