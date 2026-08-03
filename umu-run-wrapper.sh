@@ -23,6 +23,9 @@ if [[ "$args_lower" == *"nikke"* ]]; then
     DW="$HOME/.local/share/lutris/runners/wine/dwproton-11.0-5-x86_64"
   fi
 
+  # Prepend DW Proton binaries to PATH so DW wineserver is used!
+  export PATH="$DW/files/bin:$PATH"
+
   DXVK_DIR="$HOME/.local/share/lutris/runtime/dxvk/v2.4.1"
   if [ -d "$DXVK_DIR" ]; then
     cp -rn "$DXVK_DIR/x64/"*.dll "$WINEPREFIX/drive_c/windows/system32/" 2>/dev/null

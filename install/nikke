@@ -22,6 +22,8 @@ if [ ! -d "$DW" ]; then
   DW="$HOME/.local/share/lutris/runners/wine/dwproton-11.0-5-x86_64"
 fi
 
+# Prepend DW Proton binaries to PATH so DW wineserver is used!
+export PATH="$DW/files/bin:$PATH"
 WINE_BIN="$DW/files/bin/wine"
 
 DXVK_DIR="$HOME/.local/share/lutris/runtime/dxvk/v2.4.1"
