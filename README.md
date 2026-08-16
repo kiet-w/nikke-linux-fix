@@ -1,177 +1,88 @@
-# 🎮 NIKKE Linux Fix — Bypass "Steam is Offline" Error
+# 🎮 NIKKE Linux Fix & Extreme Performance Launcher
 
-> Fix for **GODDESS OF VICTORY: NIKKE** on Linux when using **Lutris** (Flatpak).
-> Bypasses the "Steam is offline, please log in from Steam" error that blocks the launcher.
+> **GODDESS OF VICTORY: NIKKE** on Linux (Steam / Proton / Lutris) — Ultimate Setup, Automatic `game1` Shortcut & Extreme FPS Optimization for Intel iGPU & Mid/Low-end CPUs.
 
 ![Platform](https://img.shields.io/badge/Platform-Linux-yellow)
-![Launcher](https://img.shields.io/badge/Launcher-Lutris%20(Flatpak)-blue)
-![Proton](https://img.shields.io/badge/Proton-DW%20Proton%2011.0--5-green)
-![Status](https://img.shields.io/badge/Status-Working-brightgreen)
+![Runner](https://img.shields.io/badge/Proton-DW--Proton%20%7C%20GE--Proton-green)
+![Shortcut](https://img.shields.io/badge/Shortcut-game1-blue)
+![Status](https://img.shields.io/badge/Status-Tested%20%26%20Working-brightgreen)
 
 ---
 
-## 📋 Problem
+## 🇻🇳 Hướng Dẫn Nhanh (Vietnamese)
 
-When launching NIKKE on Linux via **Lutris**, the launcher shows:
-
-```
-Notice
-Steam is offline, please log in from Steam.
-[CONFIRM]
-```
-
-- Clicking **X** → game exits immediately
-- Clicking **CONFIRM** → game exits immediately
-- The game is **completely unplayable** because of this modal
-
-### Root Cause
-
-Lutris uses **UMU** (a Steam Runtime compatibility layer) to run games with Proton. UMU automatically sets the environment variable `SteamAppId=0`, which tells the NIKKE launcher's `INTLSteam.dll` that the game was launched from a Steam context. The DLL then tries to connect to a Steam client that doesn't exist → "Steam is offline" → forced exit.
-
----
-
-## ✅ Solution
-
-The fix has **2 parts**:
-1. Install **DW Proton** (Dawn Winery Proton) — a custom Proton fork optimized for anime/gacha games
-2. Create a **wrapper script** that bypasses UMU and removes all Steam environment variables for NIKKE
-
----
-
-## 🚀 Quick Install (Automated)
+### 🚀 Cài Đặt Tự Động 1-Click
+Mở Terminal và chạy lệnh sau để tự động cấu hình lệnh `game1`, script khởi chạy và tối ưu DXVK:
 
 ```bash
 git clone https://github.com/kiet-w/nikke-linux-fix.git
 cd nikke-linux-fix
-chmod +x fix-nikke-steam.sh
+chmod +x install.sh
+./install.sh
+```
+
+### ⚡ Cách Sử Dụng Lệnh `game1`
+Sau khi chạy `./install.sh`, bạn chỉ cần gõ:
+- **Khởi chạy game**: Gõ `game1` từ bất kỳ màn hình Terminal nào (hoặc chạy `~/play-nikke.sh`).
+- **Cập nhật / Sửa lỗi game**: Chạy lệnh `~/update-nikke.sh`.
+
+---
+
+## 🇬🇧 Quick Start (English)
+
+### 🚀 1-Click Automated Setup
+Clone the repository and run `install.sh` to automatically install launcher scripts, configure the terminal shortcut `game1`, and apply DXVK graphics tweaks:
+
+```bash
+git clone https://github.com/kiet-w/nikke-linux-fix.git
+cd nikke-linux-fix
+chmod +x install.sh
+./install.sh
+```
+
+### 🎮 Usage
+- **Launch Game**: Simply type `game1` in any terminal window (or run `~/play-nikke.sh`).
+- **Update Game**: Run `~/update-nikke.sh`.
+
+---
+
+## 📁 Repository Overview
+
+| File / Folder | Mô tả (Description) |
+|---|---|
+| 📄 `install.sh` | Script cài đặt tự động toàn bộ môi trường, thiết lập shortcut `game1` & DXVK config. |
+| 📄 `play-nikke.sh` | Script khởi chạy game với siêu tối ưu hóa (Mesa No-Error, CPU Core Pinning, uncap FPS, dọn cache). |
+| 📄 `update-nikke.sh` | Script cập nhật NIKKE Miniloader & Launcher. |
+| 📄 `dxvk.conf` | File cấu hình DXVK D3D11 tối ưu dành riêng cho Intel iGPU & Unity Engine. |
+| 📄 `fix-nikke-steam.sh` | Fix lỗi "Steam is offline" cho Lutris (Flatpak) thông qua UMU wrapper & DW-Proton. |
+
+---
+
+## ⚡ High-Performance Tweaks Included
+
+1. **CPU & Thread Topology**:
+   - Auto locks CPU cores for NIKKE (`taskset -pc 0-7`).
+   - Sets high Realtime I/O & CPU priority (`renice`, `ionice`).
+   - Lowers background Webview process overhead (`INTLWebViewHelper.exe`, `tbs_browser.exe`).
+
+2. **Mesa Graphics Driver Tuning**:
+   - Enables `MESA_NO_ERROR=1` for zero driver overhead (3-5% extra FPS boost).
+   - Enables Mesa Shader Cache (`10GB` limit) & GPL Async compilation.
+
+3. **DXVK Ultra Tweaks (`dxvk.conf`)**:
+   - Uncaps FPS (`DXVK_FRAME_RATE=0`, `vblank_mode=0`).
+   - Disables Nvidia NVAPI hack on Intel/AMD GPUs.
+   - Lowers tessellation overhead on Intel iGPU (`d3d11.maxTessellationFactor = 0`).
+
+---
+
+## 🛠 Fix Lutris "Steam is Offline" Error
+
+If launching via Lutris flatpak gives `Steam is offline, please log in from Steam`, run the dedicated Lutris fix script:
+
+```bash
 ./fix-nikke-steam.sh
 ```
-
-The script will:
-- Download and install DW Proton 11.0-5 into Lutris
-- Backup the original `umu-run`
-- Create a wrapper script that bypasses Steam for NIKKE
-- Fix broken user symlinks in the wine prefix
-
----
-
-## 🔧 Manual Install
-
-### Step 1: Download DW Proton
-
-```bash
-# Download DW Proton 11.0-5
-curl -L -o /tmp/dwproton.tar.xz \
-  https://dawn.wine/dawn-winery/dwproton/releases/download/dwproton-11.0-5/dwproton-11.0-5-x86_64.tar.xz
-
-# Extract to Lutris wine runners directory
-tar -xf /tmp/dwproton.tar.xz \
-  -C ~/.var/app/net.lutris.Lutris/data/lutris/runners/wine/
-```
-
-### Step 2: Backup original umu-run
-
-```bash
-UMU_PATH=~/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run
-
-# Only backup if not already backed up
-if [ ! -f "${UMU_PATH}.bak" ]; then
-  cp "$UMU_PATH" "${UMU_PATH}.bak"
-fi
-```
-
-### Step 3: Create the wrapper script
-
-Replace `~/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run` with:
-
-```bash
-#!/bin/bash
-# NIKKE Linux Fix - Bypass Steam offline error
-# https://github.com/kiet-w/nikke-linux-fix
-
-# Convert args to lowercase for case-insensitive matching
-args_lower="${*,,}"
-
-if [[ "$args_lower" == *"nikke"* ]]; then
-  # Bypass UMU/Steam entirely - use DW Proton wine directly
-  unset SteamAppId SteamClientLaunch PROTON_VERB PROTONPATH UMU_LOG
-  export WINEPREFIX="$GAME_DIRECTORY"
-  export WINEARCH=win64
-  export WINEFSYNC=1
-  export WINEESYNC=1
-  exec ~/.var/app/net.lutris.Lutris/data/lutris/runners/wine/dwproton-11.0-5-x86_64/files/bin/wine "$@"
-else
-  # All other games use original umu-run
-  exec ~/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run.bak "$@"
-fi
-```
-
-Make it executable:
-```bash
-chmod +x ~/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run
-```
-
-### Step 4: Fix broken symlinks (if needed)
-
-```bash
-NIKKE_PREFIX=~/Games/nikke  # Change this to your NIKKE install path
-
-# Fix broken user directory symlinks
-if [ -L "$NIKKE_PREFIX/drive_c/users/steamuser" ] && [ ! -e "$NIKKE_PREFIX/drive_c/users/steamuser" ]; then
-  rm "$NIKKE_PREFIX/drive_c/users/steamuser" "$NIKKE_PREFIX/drive_c/users/$(whoami)" 2>/dev/null
-  mkdir -p "$NIKKE_PREFIX/drive_c/users/steamuser"
-  ln -s steamuser "$NIKKE_PREFIX/drive_c/users/$(whoami)"
-fi
-```
-
-### Step 5: Launch the game
-
-```bash
-flatpak run net.lutris.Lutris lutris:nikke
-```
-
----
-
-## ⚠️ Important Notes
-
-### What NOT to do
-- ❌ **Don't delete `INTLSteam.dll`** — the launcher needs it for authentication
-- ❌ **Don't delete `steam_api64.dll`** — causes integrity check failures
-- ❌ **Don't use `WINEDLLOVERRIDES` to disable Steam DLLs** — causes crash (return code 63232)
-- ❌ **Don't just delete Steam files from `drive_c`** — the env var `SteamAppId` is the real trigger, not the files
-
-### What actually works
-- ✅ **Unset `SteamAppId` environment variable** — this is the key fix
-- ✅ **Use DW Proton instead of GE-Proton via UMU** — DW Proton runs wine directly without Steam context
-- ✅ **Case-insensitive path matching** — the game path uses `NIKKE` (uppercase), your script must handle this
-
-### Reverting the fix
-
-To restore original behavior:
-```bash
-UMU_PATH=~/.var/app/net.lutris.Lutris/data/lutris/runtime/umu/umu-run
-cp "${UMU_PATH}.bak" "$UMU_PATH"
-```
-
----
-
-## 🖥️ Tested Environment
-
-| Component | Version |
-|-----------|---------|
-| **OS** | Ubuntu (HP Pavilion Laptop 14-ce3xxx) |
-| **Launcher** | Lutris (Flatpak) |
-| **Proton** | DW Proton 11.0-5 (Dawn Winery) |
-| **Wine** | wine-11.0 (CachyOS) |
-| **Game** | GODDESS OF VICTORY: NIKKE (PC Client) |
-
----
-
-## 🤝 Credits
-
-- [Dawn Winery / DW Proton](https://dawn.wine/dawn-winery/dwproton) — Custom Proton fork for anime/gacha games
-- [Lutris](https://lutris.net/) — Open source game launcher for Linux
-- [UMU-Launcher](https://github.com/Open-Wine-Components/umu-launcher) — Steam Runtime compatibility layer
 
 ---
 
