@@ -19,7 +19,7 @@ rm -rf "$HOME/.local/share/Steam/steamapps/compatdata/2333075887/pfx/drive_c/use
 # 1. Ép tất cả nhân CPU chạy ở chế độ Maximum Performance & Tăng ulimit file descriptors
 powerprofilesctl set performance 2>/dev/null || true
 for epp in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
-    [ -f "$epp" ] && echo "performance" > "$epp" 2>/dev/null || true
+    [ -f "$epp" ] && (echo "performance" > "$epp" 2>/dev/null || true)
 done
 
 ulimit -n 1048576 2>/dev/null || ulimit -n 524288 2>/dev/null || true
@@ -28,6 +28,7 @@ ulimit -n 1048576 2>/dev/null || ulimit -n 524288 2>/dev/null || true
 export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/Steam"
 export STEAM_COMPAT_DATA_PATH="$HOME/.local/share/Steam/steamapps/compatdata/2333075887"
 export WINEPREFIX="$STEAM_COMPAT_DATA_PATH/pfx"
+mkdir -p "$STEAM_COMPAT_DATA_PATH"
 
 # Đường dẫn file config DXVK đã tối ưu cho Unity Engine & Intel iGPU
 DXVK_CONF_PATH="$WINEPREFIX/drive_c/NIKKE/NIKKE/game/dxvk.conf"
@@ -110,6 +111,10 @@ UMU_PROTON="$HOME/.steam/root/compatibilitytools.d/UMU-Proton-10.0-4/proton"
 PROTON_EXP="$HOME/.local/share/Steam/steamapps/common/Proton - Experimental/proton"
 
 echo "🎮 [3/4] Đang khởi chạy NIKKE ở Chế độ EXTREME FPS MAX..."
+if [ -d "$WINEPREFIX/drive_c/NIKKE/Launcher" ]; then
+    cd "$WINEPREFIX/drive_c/NIKKE/Launcher"
+fi
+
 if [ -f "$DW_PROTON" ]; then
     echo "▶ Dùng runner: DW-Proton-11.0-5"
     exec $GAMEMODE "$DW_PROTON" run "$NIKKE_EXE" "$@"
@@ -123,6 +128,5 @@ elif [ -f "$PROTON_EXP" ]; then
     echo "▶ Dùng runner: Proton - Experimental"
     exec $GAMEMODE "$PROTON_EXP" run "$NIKKE_EXE" "$@"
 else
-    cd "$WINEPREFIX/drive_c/NIKKE/Launcher"
     exec $GAMEMODE wine nikke_launcher.exe "$@"
 fi
